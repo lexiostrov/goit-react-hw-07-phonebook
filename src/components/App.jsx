@@ -1,16 +1,29 @@
-export const App = () => {
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AddContact } from './AddContact/AddContact';
+import { ContactsList } from './ContactsList/ContactsList';
+import { Filter } from './Filter/Filter';
+import { fetchContacts } from 'redux/option';
+
+export function App() {
+  const dispatch = useDispatch();
+  const { items, isLoading, error } = useSelector(
+    state => state.contacts.contacts
+  );
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
   return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101'
-      }}
-    >
-      React homework template
+    <div>
+      <h1>Phonebook</h1>
+      <AddContact />
+      <h2>Contacts</h2>
+      <Filter />
+      {isLoading && <b>Loading tasks...</b>}
+      {error && <b>{error}</b>}
+      {items.length > 0 ? <ContactsList /> : <h3>No contacts</h3>}
     </div>
   );
-};
+}
